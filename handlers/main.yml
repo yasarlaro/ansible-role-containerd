@@ -4,10 +4,3 @@
   service:
     name: containerd
     state: restarted
-
-- name: clean up
-  file:
-    path: "{{ item }}"
-    state: absent
-  loop:
-    - /tmp/config.toml
