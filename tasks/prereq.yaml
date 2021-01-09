@@ -2,15 +2,16 @@
 - name: Enable kernel module
   lineinfile:
     path: /etc/modules-load.d/containerd.conf
-    line: " { item }"
+    line: "{{ item }}"
     state: present
+    create: true
   loop:
     - overlay
     - br_netfilter
 
 - name: Reload kernel modules
   modprobe:
-    name: "{ item }"
+    name: "{{ item }}"
     state: ppresent
   loop:
     - overlay
@@ -18,8 +19,8 @@
 
 - name: Setup required sysctl params
   sysctl:
-    name: "{ item.name }"
-    value: "{ item.value }"
+    name: "{{ item.name }}"
+    value: "{{ item.value }}"
     sysctl_file: /etc/sysctl.d/99-kubernetes-cri.conf
     reload: true
   loop:
