@@ -1,0 +1,28 @@
+---
+- name: Enable kernel module
+  lineinfile:
+    path: /etc/modules-load.d/containerd.conf
+    line: " { item }"
+    state: present
+  loop:
+    - overlay
+    - br_netfilter
+
+- name: Reload kernel modules
+  modprobe:
+    name: "{ item }"
+    state: ppresent
+  loop:
+    - overlay
+    - br_netfilter
+
+- name: Setup required sysctl params
+  sysctl:
+    name: "{ item.name }"
+    value: "{ item.value }"
+    sysctl_file: /etc/sysctl.d/99-kubernetes-cri.conf
+    reload: true
+  loop:
+    - { name: net.bridge.bridge-nf-call-iptables, value: 1 }
+    - { name: net.ipv4.ip_forward, value: 1}
+    - { name: net.bridge.bridge-nf-call-ip6tables, value: 1}

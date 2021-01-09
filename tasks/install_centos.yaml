@@ -1,0 +1,24 @@
+---
+- name: Install on CentOS 7
+  block:
+    - name: Install required packages
+      package:
+        name:
+          - yum-utils
+          - device-mapper-persistent-data
+          - lvm2
+        state: present
+
+    - name: Create docker-ce package repository
+      get_url:
+        url: "https://download.docker.com/linux/centos/docker-ce.repo"
+        dest: /etc/yum.repos.d/docker-ce.repo
+        owner: root
+        group: root
+        mode: '0644'
+
+    - name: Install containerd.io
+      package:
+        name: containerd.io
+        state: present
+  when: "{{ ansible_distribution_major_version | int }}" == 7

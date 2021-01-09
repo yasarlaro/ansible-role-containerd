@@ -1,2 +1,11 @@
 ---
 # tasks file for ansible-role-containerd
+---
+- name: Handle prereqs
+  include_tasks: prereq.yaml
+
+- name: Install containerd
+  include_tasks: "install_{{ ansible_distribution | lower }}.yaml"
+
+- name: Configure containerd
+  include_tasks: configure.yaml
