@@ -1,6 +1,5 @@
 ---
 # tasks file for ansible-role-containerd
----
 - name: Handle prereqs
   include_tasks: prereq.yaml
 
