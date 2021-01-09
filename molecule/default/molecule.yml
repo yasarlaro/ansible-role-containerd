@@ -2,29 +2,28 @@
 dependency:
   name: galaxy
 driver:
-  name: docker
+  name: vagrant
+  provider:
+    name: libvirt
+lint: |
+  yamllint .
+  ansible-lint
 platforms:
   - name: instance1
-    image: "geerlingguy/docker-${MOLECULE_DISTRO:-centos7}-ansible:latest"
-    command: ${MOLECULE_DOCKER_COMMAND:-""}
-    volumes:
-      - /sys/fs/cgroup:/sys/fs/cgroup:ro
-    privileged: true
-    pre_build_image: true
+    box: centos/7
+    memory: 2048
+    cpus: 1
+
   - name: instance2
-    image: "geerlingguy/docker-${MOLECULE_DISTRO:-ubuntu1804}-ansible:latest"
-    command: ${MOLECULE_DOCKER_COMMAND:-""}
-    volumes:
-      - /sys/fs/cgroup:/sys/fs/cgroup:ro
-    privileged: true
-    pre_build_image: true
+    box: generic/ubuntu1804
+    memory: 2048
+    cpus: 1
+    
   - name: instance3
-    image: "geerlingguy/docker-${MOLECULE_DISTRO:-ubuntu2004}-ansible:latest"
-    command: ${MOLECULE_DOCKER_COMMAND:-""}
-    volumes:
-      - /sys/fs/cgroup:/sys/fs/cgroup:ro
-    privileged: true
-    pre_build_image: true
+    box: generic/ubuntu2004
+    memory: 2048
+    cpus: 1
+
 provisioner:
   name: ansible
   playbooks:

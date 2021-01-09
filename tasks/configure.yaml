@@ -5,30 +5,20 @@
     state: directory
     mode: '0755'
 
+- name: Check if /etc/containerd/config.toml exists
+  stat:
+    path: /etc/containerd/config.toml
+  register: containerd_config
+
 - name: Copy containerd configuration
-  shell: "containerd config default > /tmp/config.toml"
+  shell: "containerd config default > /etc/containerd/config.toml"
   args:
     warn: no
   tags: ['skip_ansible_lint']
-  notify: clean up
-
-- name: Override containerd configuration if changed
-  copy:
-    src: /tmp/config.toml
-    dest: /etc/containerd/config.toml
-    remote_src: yes
-    owner: root
-    group: root
-    mode: '0644'
-  register: containerd_config
+  when: not containerd_config.stat.exists
+  notify: restart containerd
 
 - name: Enable containerd
   service:
     name: containerd
     enabled: true
-
-- name: Restart containerd
-  service:
-    name: containerd
-    state: restarted
-  when: containerd_config.changed

@@ -1,9 +1,6 @@
-- name: Install on Ubuntu 18.04 / 20.04
-  block:
-    - name: Install containerd
-      apt:
-        name: containerd
-        update_cache: yes
-  when:
-    - {{ ansible_distribution_version.split('.') | join }}" == "1804"
-    - {{ ansible_distribution_version.split('.') | join }}" == "2004"
+- name: Install containerd on Ubuntu 18.04 / 20.04
+  apt:
+    name: containerd
+    update_cache: yes
+  when: (ansible_distribution_version.split(".") | join == "1804") or
+        (ansible_distribution_version.split(".") | join == "2004")

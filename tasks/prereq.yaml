@@ -5,6 +5,7 @@
     line: "{{ item }}"
     state: present
     create: true
+    mode: '0644'
   loop:
     - overlay
     - br_netfilter
@@ -12,7 +13,7 @@
 - name: Reload kernel modules
   modprobe:
     name: "{{ item }}"
-    state: ppresent
+    state: present
   loop:
     - overlay
     - br_netfilter
